@@ -30,7 +30,7 @@ services:
   app:
     container_name: task
     restart: always
-    build: .
+    build: ./app
     expose:
       - "8080"
     depends_on:
