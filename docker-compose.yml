@@ -1,0 +1,37 @@
+version: "3"
+services:
+  nginx:
+    container_name: nginx
+    image: nginx:1.17
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+  mysql:
+    container_name: mysql
+    image: mysql:5.6
+    restart: always
+    ports:
+      - 3306:3306
+    command: [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--default-time-zone=+8:00'
+    ]
+    environment:
+      MYSQL_DATABASE: task
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+  app:
+    container_name: task
+    restart: always
+    build: .
+    expose:
+      - "8080"
+    depends_on:
+      - mysql
